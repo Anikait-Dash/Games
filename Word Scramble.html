@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    
+        <title>Advanced Word Scramble</title>
+
+        <style>
+            body {
+                text-align: center;
+                font-family: Arial;
+                margin-top: 40px;
+                background: #f4f4f4;
+            }
+
+            h1 {
+                color: #333;
+            }
+
+            #scrambledWord {
+                font-size: 32px;
+                letter-spacing: 5px;
+                margin: 20px;
+            }
+
+            input {
+                padding: 8px;
+                font-size: 16px;
+            }   
+
+            button {
+                padding: 8px 15px;
+                margin: 5px;
+            }
+
+            #message {
+                margin-top: 15px;
+                font-weight: bold;
+            }
+        </style>
+    </head>
+
+    <body>
+
+        <h1>🧠 Advanced Word Scramble</h1>
+
+        <p>Score: <span id="score">0</span> |
+            Lives: ❤️ <span id="lives">3</span> |
+            Time: ⏳ <span id="time">20</span></p>
+
+        <select id="difficulty">
+            <option value="easy">Easy</option>
+            <option value="medium">Medium</option>
+            <option value="hard">Hard</option>
+        </select>
+
+        <div id="scrambledWord"></div>
+
+        <input type="text" id="userInput" placeholder="Type the word">
+
+        <br>
+
+        <button onclick="checkAnswer()">Submit</button>
+
+        <button onclick="showHint()">Hint</button>
+
+        <button onclick="restartGame()">Restart</button>
+
+        <p id="message"></p>
+
+        <script>
+
+            var words = {
+                easy: ["cat", "dog", "book", "tree", "milk", "boy", "girl", "man", "woman", "copy", "abash", "glove", "slay"],
+                medium: ["school", "coding", "planet", "garden", "button", "vehicle", "education", ],
+                hard: ["javascript", "computer", "developer", "keyboard", "function". "programming", "Lamborghini", "Bugatti", "Web Development"]
+            };
+
+            var currentWord = "";
+
+            var score = 0;
+
+            var lives = 3;
+
+            var timeLeft = 20;
+
+            var timer;
+
+            startGame();
+
+            function startGame() 
+            {
+                score = 0;
+                lives = 3;
+                timeLeft = 20;
+
+                document.getElementById("score").innerHTML = score;
+                document.getElementById("lives").innerHTML = lives;
+                document.getElementById("time").innerHTML = timeLeft;
+
+                newWord();
+                startTimer();
+            }
+
+            function newWord() 
+            {
+
+                var level = document.getElementById("difficulty").value;
+    
+                var wordList = words[level];
+
+                currentWord = wordList[Math.floor(Math.random() * wordList.length)];
+
+                var scrambled = currentWord.split("").sort(() => Math.random() - 0.5).join("");
+
+                document.getElementById("scrambledWord").innerHTML = scrambled;
+                
+                document.getElementById("userInput").value = "";
+            }
+
+            function checkAnswer() 
+            {
+                var userGuess = document.getElementById("userInput").value;
+
+                if (userGuess.toLowerCase() === currentWord) {
+                    score++;
+                    document.getElementById("score").innerHTML = score;
+                    document.getElementById("message").innerHTML = "✅ Correct!";
+                    newWord();
+                } 
+
+                else 
+                {
+            
+                    lives--;
+        
+                    document.getElementById("lives").innerHTML = lives;
+        
+                    document.getElementById("message").innerHTML = "❌ Wrong!";
+
+                    if (lives <= 0)
+                    {
+                        endGame("Game Over! You ran out of lives.");
+                    }
+                }
+            }
+
+            function showHint() 
+            {
+                document.getElementById("message").innerHTML = "💡 Hint: Word starts with '" + currentWord[0] + "'";
+            }
+
+            function startTimer()
+            {
+                clearInterval(timer);
+                timer = setInterval(function()
+                {
+                    timeLeft--;
+                    document.getElementById("time").innerHTML = timeLeft;
+                    if (timeLeft <= 0) 
+                    {
+                        endGame("⏳ Time's up!");
+                    }
+                }, 1000);
+            }
+
+            function endGame(message) {
+                clearInterval(timer);
+                alert(message + " Final Score: " + score);
+            }
+
+            function restartGame() {
+                clearInterval(timer);
+                startGame();
+            }
+        </script>
+    </body>
+</html>
