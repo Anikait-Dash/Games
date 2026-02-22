@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            Tic Tac Toe
+        </title>
+
+        <style>
+            body 
+            {
+                text-align: center;
+                font-family: Arial;
+            }
+
+            #board 
+            {
+                width: 300px;
+                margin: 20px auto;
+                display: grid;
+                grid-template-columns: repeat(3, 100px);
+                grid-template-rows: repeat(3, 100px);
+            }
+
+            .cell 
+            {
+                border: 2px solid black;
+                font-size: 40px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                cursor: pointer;
+            }
+
+            button 
+            {
+                margin-top: 15px;
+                padding: 8px 15px;
+            }
+        </style>
+    </head>
+
+    <body>
+
+        <h1>❌⭕ Tic Tac Toe</h1>
+        <h2 id="status">Player X's Turn</h2>
+
+        <div id="board"></div>
+
+        <button onclick="resetGame()">Restart</button>
+
+        <script>
+
+            var currentPlayer = "X";
+            
+            var board = ["", "", "", "", "", "", "", "", ""];
+
+            // Create board
+            var boardDiv = document.getElementById("board");
+
+            for (let i = 0; i < 9; i++)
+            {
+                var cell = document.createElement("div");
+                cell.classList.add("cell");
+                cell.setAttribute("data-index", i);
+                cell.onclick = cellClick;
+                boardDiv.appendChild(cell);
+            }
+
+            function cellClick() 
+            {
+
+                var index = this.getAttribute("data-index");
+
+                if (board[index] === "") 
+                {
+
+                    board[index] = currentPlayer;
+                    this.innerHTML = currentPlayer;
+
+                    if (checkWinner()) 
+                    {
+                        document.getElementById("status").innerHTML = "Player " + currentPlayer + " Wins!";
+                        return;
+                    }
+
+                    // Switch player
+                    currentPlayer = currentPlayer === "X" ? "O" : "X";
+                    document.getElementById("status").innerHTML = "Player " + currentPlayer + "'s Turn";
+                }
+            }
+
+            function checkWinner() 
+            {
+                var winPatterns = [
+                    [0,1,2],
+                    [3,4,5],
+                    [6,7,8],
+                    [0,3,6],
+                    [1,4,7],
+                    [2,5,8],
+                    [0,4,8],
+                    [2,4,6]
+                ];
+
+                for (var i = 0; i < winPatterns.length; i++) 
+                {
+                    var a = winPatterns[i][0];
+                    var b = winPatterns[i][1];
+                    var c = winPatterns[i][2];
+                    if (board[a] !== "" && board[a] === board[b] && board[a] === board[c]) 
+                    {
+                        return true;
+                    }
+                }
+                return false;       
+            }
+
+            function resetGame() 
+            {
+                board = ["", "", "", "", "", "", "", "", ""];
+                currentPlayer = "X";
+                document.getElementById("status").innerHTML = "Player X's Turn";
+
+                var cells = document.querySelectorAll(".cell");
+                cells.forEach(cell => cell.innerHTML = "");
+            }
+
+        </script>
+    </body>
+</html>
+</html>
